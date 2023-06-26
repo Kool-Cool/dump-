@@ -23,6 +23,13 @@ $$Z = X W_k$$
 where $W_k$ is a matrix containing the k eigenvectors as columns.
 
 ## Implementing PCA
+1. Standardize your data: This means to center your data around zero and scale it to have unit variance. This ensures that all variables have equal weight and are comparable.
+2. Calculate the covariance matrix: This is a square matrix that contains the covariance between each pair of variables. The covariance measures how two variables vary together, and it can be positive, negative, or zero.
+3. Find the eigenvalues and eigenvectors of the covariance matrix: The eigenvalues are scalars that indicate how much variance is explained by each eigenvector. The eigenvectors are vectors that define the direction of each principal component.
+4. Sort the eigenvalues and eigenvectors in descending order: The eigenvalue with the highest value corresponds to the eigenvector with the most variance, which is the first principal component. The eigenvalue with the second highest value corresponds to the eigenvector with the second most variance, which is the second principal component, and so on.
+5. Choose how many principal components to keep: You can use different criteria to decide how many principal components to retain, such as keeping a certain percentage of variance explained, using a scree plot, or applying a Kaiser rule.
+6. Project your data onto the new axes: You can use matrix multiplication to transform your original data into a new matrix with fewer columns, where each column is a principal component.
+
 
 To implement PCA in Python, we can use the numpy library for linear algebra operations, and matplotlib for plotting. Here is an example of how to apply PCA to a synthetic dataset with two features:
 ```python
@@ -87,32 +94,39 @@ Here is some example code that illustrates these steps:
 # Import libraries
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt
 
-# Load dataset
-df = pd.read_csv("iris.csv")
-X = df.drop("species", axis=1)
-y = df["species"]
+# Load sample dataset
+df = pd.read_csv('sample_data.csv')
 
-# Standardize data
+# Separate features and target
+X = df.drop('target', axis=1)
+y = df['target']
+
+# Standardize features
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# Create PCA instance
+# Create PCA object
 pca = PCA(n_components=2)
 
 # Fit and transform data
 X_pca = pca.fit_transform(X_scaled)
 
-# Plot principal components
-plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y)
-plt.xlabel("PC1")
-plt.ylabel("PC2")
-plt.title("PCA of Iris Dataset")
+# Plot data
+plt.scatter(X_pca[:,0], X_pca[:,1], c=y)
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+plt.title('PCA on sample dataset')
 plt.show()
+
+# Print explained variance ratio
+print(pca.explained_variance_ratio_)
+
 ```
 
 I hope this file has helped you understand PCA better and how to use it in Python. Happy coding!
+
 
